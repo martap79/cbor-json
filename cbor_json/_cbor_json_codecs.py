@@ -31,8 +31,8 @@ def _transform_collection(src, encountered_ids, conv_func):
             conv_func(k, encountered_ids): conv_func(v, encountered_ids)
             for k, v in src.items()
         }
-    elif isinstance(src, cbor2.types.FrozenDict):
-        res = cbor2.types.FrozenDict([
+    elif isinstance(src, cbor2.FrozenDict):
+        res = cbor2.FrozenDict([
             [conv_func(k, encountered_ids), conv_func(v, encountered_ids)]
             for k, v in src.items()
         ])
@@ -61,7 +61,7 @@ def _cborable_from_native(native, encountered_ids=None):
 
     this_id = None
     res = None
-    if isinstance(native, (list, tuple, dict, cbor2.types.FrozenDict,
+    if isinstance(native, (list, tuple, dict, cbor2.FrozenDict,
                            set, frozenset, SerializableToCbor, cbor2.CBORTag)):
         this_id = id(native)
         if this_id in encountered_ids:
@@ -104,7 +104,7 @@ def _native_from_cborable(cborable, encountered_ids=None):
 
     this_id = None
     res = None
-    if isinstance(cborable, (list, tuple, dict, cbor2.types.FrozenDict,
+    if isinstance(cborable, (list, tuple, dict, cbor2.FrozenDict,
                              set, frozenset, cbor2.CBORTag)):
         this_id = id(cborable)
         if this_id in encountered_ids:
@@ -159,7 +159,7 @@ def _freeze(val):
     if isinstance(val, set):
         return frozenset(_freeze(el) for el in val)
     if isinstance(val, dict):
-        return cbor2.types.FrozenDict({_freeze(k): _freeze(v) for k, v in val.items()})
+        return cbor2.FrozenDict({_freeze(k): _freeze(v) for k, v in val.items()})
     return val
 
 
@@ -245,7 +245,7 @@ def _cborable_from_jsonable(jsonable, enforce_object: bool = False):
 def _jsonable_from_cborable(cborable):
     if isinstance(cborable, list):
         return [_jsonable_from_cborable(el) for el in cborable]
-    if isinstance(cborable, (dict, cbor2.types.FrozenDict)):
+    if isinstance(cborable, (dict, cbor2.FrozenDict)):
         if '$type' not in cborable and all(isinstance(k, str) for k in cborable.keys()):
             return {k: _jsonable_from_cborable(v) for k, v in cborable.items()}
         return {'$type': 'map',
