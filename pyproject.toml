@@ -2,7 +2,7 @@
 name = "cbor-json"
 #module = "cbor_json"
 #dist-name = "cbor-json"
-version = "0.0.4"
+version = "0.0.5"
 description = "Three-way conversion between 'native' Python data representation, CBOR, and JSON"
 authors = ["Alexander Maslyeav <maslyaev@gmail.com>"]
 license = "MIT"
@@ -20,7 +20,7 @@ classifiers = [
 
 [tool.poetry.dependencies]
 python = "^3.7"
-cbor2 = "^5.4.0"
+cbor2 = "^5.5.1"
 
 [tool.poetry.dev-dependencies]
 pytest = "^6.2.4"
